@@ -10,24 +10,29 @@ It is generated from our [OpenAPI specification](https://github.com/openai/opena
 
 ## Documentation
 
-The API documentation can be found [here](https://platform.openai.com/docs).
+The REST API documentation can be found [on platform.openai.com](https://platform.openai.com/docs). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
+> [!IMPORTANT]
+> The SDK was rewritten in v1, which was released November 6th 2023. See the [v1 migration guide](https://github.com/openai/openai-python/discussions/742), which includes scripts to automatically update your code.
+
 ```sh
+# install from PyPI
 pip install openai
 ```
 
 ## Usage
 
-The full API of this library can be found in [api.md](https://www.github.com/openai/openai-python/blob/main/api.md).
+The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from openai import OpenAI
 
 client = OpenAI(
-    # defaults to os.environ.get("OPENAI_API_KEY")
-    api_key="My API Key",
+    # This is the default and can be omitted
+    api_key=os.environ.get("OPENAI_API_KEY"),
 )
 
 chat_completion = client.chat.completions.create(
@@ -46,17 +51,68 @@ we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
 to add `OPENAI_API_KEY="My API Key"` to your `.env` file
 so that your API Key is not stored in source control.
 
+### Polling Helpers
+
+When interacting with the API some actions such as starting a Run and adding files to vector stores are asynchronous and take time to complete. The SDK includes
+helper functions which will poll the status until it reaches a terminal state and then return the resulting object.
+If an API method results in an action which could benefit from polling there will be a corresponding version of the
+method ending in '\_and_poll'.
+
+For instance to create a Run and poll until it reaches a terminal state you can run:
+
+```python
+run = client.beta.threads.runs.create_and_poll(
+    thread_id=thread.id,
+    assistant_id=assistant.id,
+)
+```
+
+More information on the lifecycle of a Run can be found in the [Run Lifecycle Documentation](https://platform.openai.com/docs/assistants/how-it-works/run-lifecycle)
+
+### Bulk Upload Helpers
+
+When creating an interacting with vector stores, you can use the polling helpers to monitor the status of operations.
+For convenience, we also provide a bulk upload helper to allow you to simultaneously upload several files at once.
+
+```python
+sample_files = [Path("sample-paper.pdf"), ...]
+
+batch = await client.vector_stores.file_batches.upload_and_poll(
+    store.id,
+    files=sample_files,
+)
+```
+
+### Streaming Helpers
+
+The SDK also includes helpers to process streams and handle the incoming events.
+
+```python
+with client.beta.threads.runs.stream(
+    thread_id=thread.id,
+    assistant_id=assistant.id,
+    instructions="Please address the user as Jane Doe. The user has a premium account.",
+) as stream:
+    for event in stream:
+        # Print the text from text delta events
+        if event.type == "thread.message.delta" and event.data.delta.content:
+            print(event.data.delta.content[0].text)
+```
+
+More information on streaming helpers can be found in the dedicated documentation: [helpers.md](helpers.md)
+
 ## Async usage
 
 Simply import `AsyncOpenAI` instead of `OpenAI` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from openai import AsyncOpenAI
 
 client = AsyncOpenAI(
-    # defaults to os.environ.get("OPENAI_API_KEY")
-    api_key="My API Key",
+    # This is the default and can be omitted
+    api_key=os.environ.get("OPENAI_API_KEY"),
 )
 
 
@@ -77,7 +133,7 @@ asyncio.run(main())
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
 
-## Streaming Responses
+## Streaming responses
 
 We provide support for streaming responses using Server Side Events (SSE).
 
@@ -91,8 +147,8 @@ stream = client.chat.completions.create(
     messages=[{"role": "user", "content": "Say this is a test"}],
     stream=True,
 )
-for part in stream:
-    print(part.choices[0].delta.content or "")
+for chunk in stream:
+    print(chunk.choices[0].delta.content or "", end="")
 ```
 
 The async client uses the exact same interface.
@@ -102,13 +158,18 @@ from openai import AsyncOpenAI
 
 client = AsyncOpenAI()
 
-stream = await client.chat.completions.create(
-    prompt="Say this is a test",
-    messages=[{"role": "user", "content": "Say this is a test"}],
-    stream=True,
-)
-async for part in stream:
-    print(part.choices[0].delta.content or "")
+
+async def main():
+    stream = await client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": "Say this is a test"}],
+        stream=True,
+    )
+    async for chunk in stream:
+        print(chunk.choices[0].delta.content or "", end="")
+
+
+asyncio.run(main())
 ```
 
 ## Module-level client
@@ -153,7 +214,10 @@ We recommend that you always instantiate a client (e.g., with `client = OpenAI()
 
 ## Using types
 
-Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev), which provide helper methods for things like serializing back into JSON ([v1](https://docs.pydantic.dev/1.10/usage/models/), [v2](https://docs.pydantic.dev/latest/usage/serialization/)). To get a dictionary, call `model.model_dump()`.
+Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev) which also provide helper methods for things like:
+
+- Serializing back into JSON, `model.to_json()`
+- Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
@@ -237,10 +301,19 @@ from openai import OpenAI
 
 client = OpenAI()
 
-page = client.files.list()
+completion = client.chat.completions.create(
+    messages=[
+        {
+            "role": "user",
+            "content": "Can you generate an example json object describing a fruit?",
+        }
+    ],
+    model="gpt-3.5-turbo-1106",
+    response_format={"type": "json_object"},
+)
 ```
 
-## File Uploads
+## File uploads
 
 Request parameters that correspond to file uploads can be passed as `bytes`, a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
 
@@ -274,8 +347,9 @@ from openai import OpenAI
 client = OpenAI()
 
 try:
-    client.fine_tunes.create(
-        training_file="file-XGinujblHPwGLSztz8cPS8XY",
+    client.fine_tuning.jobs.create(
+        model="gpt-3.5-turbo",
+        training_file="file-abc123",
     )
 except openai.APIConnectionError as e:
     print("The server could not be reached")
@@ -340,7 +414,7 @@ from openai import OpenAI
 
 # Configure the default for all requests:
 client = OpenAI(
-    # default is 60s
+    # 20 seconds (default is 10 minutes)
     timeout=20.0,
 )
 
@@ -350,7 +424,7 @@ client = OpenAI(
 )
 
 # Override per-request:
-client.with_options(timeout=5 * 1000).chat.completions.create(
+client.with_options(timeout=5.0).chat.completions.create(
     messages=[
         {
             "role": "user",
@@ -391,7 +465,7 @@ if response.my_field is None:
 
 ### Accessing raw response data (e.g. headers)
 
-The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call.
+The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
 from openai import OpenAI
@@ -410,7 +484,75 @@ completion = response.parse()  # get the object that `chat.completions.create()`
 print(completion)
 ```
 
-These methods return an [`APIResponse`](https://github.com/openai/openai-python/tree/main/src/openai/_response.py) object.
+These methods return an [`LegacyAPIResponse`](https://github.com/openai/openai-python/tree/main/src/openai/_legacy_response.py) object. This is a legacy class as we're changing it slightly in the next major version.
+
+For the sync client this will mostly be the same with the exception
+of `content` & `text` will be methods instead of properties. In the
+async client, all methods will be async.
+
+A migration script will be provided & the migration in general should
+be smooth.
+
+#### `.with_streaming_response`
+
+The above interface eagerly reads the full response body when you make the request, which may not always be what you want.
+
+To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
+
+As such, `.with_streaming_response` methods return a different [`APIResponse`](https://github.com/openai/openai-python/tree/main/src/openai/_response.py) object, and the async client returns an [`AsyncAPIResponse`](https://github.com/openai/openai-python/tree/main/src/openai/_response.py) object.
+
+```python
+with client.chat.completions.with_streaming_response.create(
+    messages=[
+        {
+            "role": "user",
+            "content": "Say this is a test",
+        }
+    ],
+    model="gpt-3.5-turbo",
+) as response:
+    print(response.headers.get("X-My-Header"))
+
+    for line in response.iter_lines():
+        print(line)
+```
+
+The context manager is required so that the response will reliably be closed.
+
+### Making custom/undocumented requests
+
+This library is typed for convenient access to the documented API.
+
+If you need to access undocumented endpoints, params, or response properties, the library can still be used.
+
+#### Undocumented endpoints
+
+To make requests to undocumented endpoints, you can make requests using `client.get`, `client.post`, and other
+http verbs. Options on the client will be respected (such as retries) will be respected when making this
+request.
+
+```py
+import httpx
+
+response = client.post(
+    "/foo",
+    cast_to=httpx.Response,
+    body={"my_param": True},
+)
+
+print(response.headers.get("x-foo"))
+```
+
+#### Undocumented request params
+
+If you want to explicitly send an extra param, you can do so with the `extra_query`, `extra_body`, and `extra_headers` request
+options.
+
+#### Undocumented response properties
+
+To access undocumented response properties, you can access the extra fields like `response.unknown_prop`. You
+can also get all the extra fields on the Pydantic model as a dict with
+[`response.model_extra`](https://docs.pydantic.dev/latest/api/base_model/#pydantic.BaseModel.model_extra).
 
 ### Configuring the HTTP client
 
@@ -421,12 +563,12 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 - Additional [advanced](https://www.python-httpx.org/advanced/#client-instances) functionality
 
 ```python
-import httpx
-from openai import OpenAI
+from openai import OpenAI, DefaultHttpxClient
 
 client = OpenAI(
+    # Or use the `OPENAI_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
-    http_client=httpx.Client(
+    http_client=DefaultHttpxClient(
         proxies="http://my.test.proxy.example.com",
         transport=httpx.HTTPTransport(local_address="0.0.0.0"),
     ),
@@ -439,7 +581,7 @@ By default the library closes underlying HTTP connections whenever the client is
 
 ## Microsoft Azure OpenAI
 
-To use this library with [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview), use the `AzureOpenAI`
+To use this library with [Azure OpenAI](https://learn.microsoft.com/azure/ai-services/openai/overview), use the `AzureOpenAI`
 class instead of the `OpenAI` class.
 
 > [!IMPORTANT]
@@ -451,9 +593,9 @@ from openai import AzureOpenAI
 
 # gets the API Key from environment variable AZURE_OPENAI_API_KEY
 client = AzureOpenAI(
-    # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning
-    api_version="2023-07-01-preview"
-    # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource
+    # https://learn.microsoft.com/azure/ai-services/openai/reference#rest-api-versioning
+    api_version="2023-07-01-preview",
+    # https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource
     azure_endpoint="https://example-endpoint.openai.azure.com",
 )
 
@@ -466,18 +608,18 @@ completion = client.chat.completions.create(
         },
     ],
 )
-print(completion.model_dump_json(indent=2))
+print(completion.to_json())
 ```
 
 In addition to the options provided in the base `OpenAI` client, the following options are provided:
 
-- `azure_endpoint`
+- `azure_endpoint` (or the `AZURE_OPENAI_ENDPOINT` environment variable)
 - `azure_deployment`
-- `api_version`
-- `azure_ad_token`
+- `api_version` (or the `OPENAI_API_VERSION` environment variable)
+- `azure_ad_token` (or the `AZURE_OPENAI_AD_TOKEN` environment variable)
 - `azure_ad_token_provider`
 
-An example of using the client with Azure Active Directory can be found [here](https://github.com/openai/openai-python/blob/v1/examples/azure_ad.py).
+An example of using the client with Microsoft Entra ID (formerly known as Azure Active Directory) can be found [here](https://github.com/openai/openai-python/blob/main/examples/azure_ad.py).
 
 ## Versioning
 
