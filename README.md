@@ -10,7 +10,7 @@ It is generated from our [OpenAPI specification](https://github.com/openai/opena
 
 ## Documentation
 
-The REST API documentation can be found [on platform.openai.com](https://platform.openai.com/docs). The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [platform.openai.com](https://platform.openai.com/docs). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
@@ -55,7 +55,7 @@ so that your API Key is not stored in source control.
 
 When interacting with the API some actions such as starting a Run and adding files to vector stores are asynchronous and take time to complete. The SDK includes
 helper functions which will poll the status until it reaches a terminal state and then return the resulting object.
-If an API method results in an action which could benefit from polling there will be a corresponding version of the
+If an API method results in an action that could benefit from polling there will be a corresponding version of the
 method ending in '\_and_poll'.
 
 For instance to create a Run and poll until it reaches a terminal state you can run:
@@ -71,7 +71,7 @@ More information on the lifecycle of a Run can be found in the [Run Lifecycle Do
 
 ### Bulk Upload Helpers
 
-When creating an interacting with vector stores, you can use the polling helpers to monitor the status of operations.
+When creating and interacting with vector stores, you can use polling helpers to monitor the status of operations.
 For convenience, we also provide a bulk upload helper to allow you to simultaneously upload several files at once.
 
 ```python
@@ -85,7 +85,7 @@ batch = await client.vector_stores.file_batches.upload_and_poll(
 
 ### Streaming Helpers
 
-The SDK also includes helpers to process streams and handle the incoming events.
+The SDK also includes helpers to process streams and handle incoming events.
 
 ```python
 with client.beta.threads.runs.stream(
@@ -201,7 +201,7 @@ completion = openai.chat.completions.create(
 print(completion.choices[0].message.content)
 ```
 
-The API is the exact same as the standard client instance based API.
+The API is the exact same as the standard client instance-based API.
 
 This is intended to be used within REPLs or notebooks for faster iteration, **not** in application code.
 
@@ -228,7 +228,7 @@ List methods in the OpenAI API are paginated.
 This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
 
 ```python
-import openai
+from openai import OpenAI
 
 client = OpenAI()
 
@@ -246,7 +246,7 @@ Or, asynchronously:
 
 ```python
 import asyncio
-import openai
+from openai import AsyncOpenAI
 
 client = AsyncOpenAI()
 
@@ -560,7 +560,7 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 - Support for proxies
 - Custom transports
-- Additional [advanced](https://www.python-httpx.org/advanced/#client-instances) functionality
+- Additional [advanced](https://www.python-httpx.org/advanced/clients/) functionality
 
 ```python
 from openai import OpenAI, DefaultHttpxClient
@@ -573,6 +573,12 @@ client = OpenAI(
         transport=httpx.HTTPTransport(local_address="0.0.0.0"),
     ),
 )
+```
+
+You can also customize the client on a per-request basis by using `with_options()`:
+
+```python
+client.with_options(http_client=DefaultHttpxClient(...))
 ```
 
 ### Managing HTTP resources

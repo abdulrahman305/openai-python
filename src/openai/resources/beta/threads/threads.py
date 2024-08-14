@@ -41,9 +41,7 @@ from ....types.beta import (
     thread_update_params,
     thread_create_and_run_params,
 )
-from ...._base_client import (
-    make_request_options,
-)
+from ...._base_client import make_request_options
 from ....lib.streaming import (
     AssistantEventHandler,
     AssistantEventHandlerT,
@@ -52,6 +50,7 @@ from ....lib.streaming import (
     AsyncAssistantEventHandlerT,
     AsyncAssistantStreamManager,
 )
+from ....types.chat_model import ChatModel
 from ....types.beta.thread import Thread
 from ....types.beta.threads.run import Run
 from ....types.beta.thread_deleted import ThreadDeleted
@@ -264,33 +263,7 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         stream: Optional[Literal[False]] | NotGiven = NOT_GIVEN,
@@ -349,6 +322,11 @@ class Threads(SyncAPIResource):
               [GPT-4o](https://platform.openai.com/docs/models/gpt-4o),
               [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4),
               and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+              Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured
+              Outputs which guarantees the model will match your supplied JSON schema. Learn
+              more in the
+              [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
 
               Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the
               message the model generates is valid JSON.
@@ -416,33 +394,7 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
@@ -504,6 +456,11 @@ class Threads(SyncAPIResource):
               [GPT-4o](https://platform.openai.com/docs/models/gpt-4o),
               [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4),
               and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+              Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured
+              Outputs which guarantees the model will match your supplied JSON schema. Learn
+              more in the
+              [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
 
               Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the
               message the model generates is valid JSON.
@@ -567,33 +524,7 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
@@ -656,6 +587,11 @@ class Threads(SyncAPIResource):
               [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4),
               and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
+              Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured
+              Outputs which guarantees the model will match your supplied JSON schema. Learn
+              more in the
+              [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
+
               Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the
               message the model generates is valid JSON.
 
@@ -717,33 +653,7 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         stream: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
@@ -801,33 +711,8 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -856,6 +741,7 @@ class Threads(SyncAPIResource):
             max_prompt_tokens=max_prompt_tokens,
             metadata=metadata,
             model=model,
+            parallel_tool_calls=parallel_tool_calls,
             response_format=response_format,
             temperature=temperature,
             stream=False,
@@ -881,33 +767,8 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -935,33 +796,8 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -989,33 +825,8 @@ class Threads(SyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -1050,13 +861,14 @@ class Threads(SyncAPIResource):
                     "max_prompt_tokens": max_prompt_tokens,
                     "metadata": metadata,
                     "model": model,
+                    "parallel_tool_calls": parallel_tool_calls,
                     "response_format": response_format,
                     "temperature": temperature,
                     "tool_choice": tool_choice,
                     "stream": True,
                     "thread": thread,
                     "tools": tools,
-                    "tool": tool_resources,
+                    "tool_resources": tool_resources,
                     "truncation_strategy": truncation_strategy,
                     "top_p": top_p,
                 },
@@ -1274,33 +1086,7 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         stream: Optional[Literal[False]] | NotGiven = NOT_GIVEN,
@@ -1359,6 +1145,11 @@ class AsyncThreads(AsyncAPIResource):
               [GPT-4o](https://platform.openai.com/docs/models/gpt-4o),
               [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4),
               and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+              Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured
+              Outputs which guarantees the model will match your supplied JSON schema. Learn
+              more in the
+              [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
 
               Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the
               message the model generates is valid JSON.
@@ -1426,33 +1217,7 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
@@ -1514,6 +1279,11 @@ class AsyncThreads(AsyncAPIResource):
               [GPT-4o](https://platform.openai.com/docs/models/gpt-4o),
               [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4),
               and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
+
+              Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured
+              Outputs which guarantees the model will match your supplied JSON schema. Learn
+              more in the
+              [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
 
               Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the
               message the model generates is valid JSON.
@@ -1577,33 +1347,7 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
@@ -1666,6 +1410,11 @@ class AsyncThreads(AsyncAPIResource):
               [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4),
               and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.
 
+              Setting to `{ "type": "json_schema", "json_schema": {...} }` enables Structured
+              Outputs which guarantees the model will match your supplied JSON schema. Learn
+              more in the
+              [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
+
               Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the
               message the model generates is valid JSON.
 
@@ -1727,33 +1476,7 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
         parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         stream: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
@@ -1811,33 +1534,8 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -1866,6 +1564,7 @@ class AsyncThreads(AsyncAPIResource):
             max_prompt_tokens=max_prompt_tokens,
             metadata=metadata,
             model=model,
+            parallel_tool_calls=parallel_tool_calls,
             response_format=response_format,
             temperature=temperature,
             stream=False,
@@ -1893,33 +1592,8 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -1947,33 +1621,8 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -2001,33 +1650,8 @@ class AsyncThreads(AsyncAPIResource):
         max_completion_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         max_prompt_tokens: Optional[int] | NotGiven = NOT_GIVEN,
         metadata: Optional[object] | NotGiven = NOT_GIVEN,
-        model: Union[
-            str,
-            Literal[
-                "gpt-4o",
-                "gpt-4o-2024-05-13",
-                "gpt-4-turbo",
-                "gpt-4-turbo-2024-04-09",
-                "gpt-4-0125-preview",
-                "gpt-4-turbo-preview",
-                "gpt-4-1106-preview",
-                "gpt-4-vision-preview",
-                "gpt-4",
-                "gpt-4-0314",
-                "gpt-4-0613",
-                "gpt-4-32k",
-                "gpt-4-32k-0314",
-                "gpt-4-32k-0613",
-                "gpt-3.5-turbo",
-                "gpt-3.5-turbo-16k",
-                "gpt-3.5-turbo-0613",
-                "gpt-3.5-turbo-1106",
-                "gpt-3.5-turbo-0125",
-                "gpt-3.5-turbo-16k-0613",
-            ],
-            None,
-        ]
-        | NotGiven = NOT_GIVEN,
+        model: Union[str, ChatModel, None] | NotGiven = NOT_GIVEN,
+        parallel_tool_calls: bool | NotGiven = NOT_GIVEN,
         response_format: Optional[AssistantResponseFormatOptionParam] | NotGiven = NOT_GIVEN,
         temperature: Optional[float] | NotGiven = NOT_GIVEN,
         thread: thread_create_and_run_params.Thread | NotGiven = NOT_GIVEN,
@@ -2064,13 +1688,14 @@ class AsyncThreads(AsyncAPIResource):
                     "max_prompt_tokens": max_prompt_tokens,
                     "metadata": metadata,
                     "model": model,
+                    "parallel_tool_calls": parallel_tool_calls,
                     "response_format": response_format,
                     "temperature": temperature,
                     "tool_choice": tool_choice,
                     "stream": True,
                     "thread": thread,
                     "tools": tools,
-                    "tool": tool_resources,
+                    "tool_resources": tool_resources,
                     "truncation_strategy": truncation_strategy,
                     "top_p": top_p,
                 },
