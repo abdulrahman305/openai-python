@@ -9,9 +9,9 @@ import pydantic
 from .._tools import PydanticFunctionTool
 from ..._types import NOT_GIVEN, NotGiven
 from ..._utils import is_dict, is_given
-from ..._compat import model_parse_json
+from ..._compat import PYDANTIC_V2, model_parse_json
 from ..._models import construct_type_unchecked
-from .._pydantic import to_strict_json_schema
+from .._pydantic import is_basemodel_type, to_strict_json_schema, is_dataclass_like_type
 from ...types.chat import (
     ParsedChoice,
     ChatCompletion,
@@ -45,13 +45,13 @@ def validate_input_tools(
     for tool in tools:
         if tool["type"] != "function":
             raise ValueError(
-                f'Currently only `function` tool types support auto-parsing; Received `{tool["type"]}`',
+                f"Currently only `function` tool types support auto-parsing; Received `{tool['type']}`",
             )
 
         strict = tool["function"].get("strict")
         if strict is not True:
             raise ValueError(
-                f'`{tool["function"]["name"]}` is not strict. Only `strict` function tools can be auto-parsed'
+                f"`{tool['function']['name']}` is not strict. Only `strict` function tools can be auto-parsed"
             )
 
 
@@ -69,7 +69,7 @@ def parse_chat_completion(
     choices: list[ParsedChoice[ResponseFormatT]] = []
     for choice in chat_completion.choices:
         if choice.finish_reason == "length":
-            raise LengthFinishReasonError()
+            raise LengthFinishReasonError(completion=chat_completion)
 
         if choice.finish_reason == "content_filter":
             raise ContentFilterFinishReasonError()
@@ -111,7 +111,7 @@ def parse_chat_completion(
                             response_format=response_format,
                             message=message,
                         ),
-                        "tool_calls": tool_calls,
+                        "tool_calls": tool_calls if tool_calls else None,
                     },
                 },
             )
@@ -157,7 +157,7 @@ def maybe_parse_content(
     response_format: type[ResponseFormatT] | ResponseFormatParam | NotGiven,
     message: ChatCompletionMessage | ParsedChatCompletionMessage[object],
 ) -> ResponseFormatT | None:
-    if has_rich_response_format(response_format) and message.content is not None and not message.refusal:
+    if has_rich_response_format(response_format) and message.content and not message.refusal:
         return _parse_content(response_format, message.content)
 
     return None
@@ -216,13 +216,15 @@ def is_parseable_tool(input_tool: ChatCompletionToolParam) -> bool:
     return cast(FunctionDefinition, input_fn).get("strict") or False
 
 
-def is_basemodel_type(typ: type) -> TypeGuard[type[pydantic.BaseModel]]:
-    return issubclass(typ, pydantic.BaseModel)
-
-
 def _parse_content(response_format: type[ResponseFormatT], content: str) -> ResponseFormatT:
     if is_basemodel_type(response_format):
         return cast(ResponseFormatT, model_parse_json(response_format, content))
+
+    if is_dataclass_like_type(response_format):
+        if not PYDANTIC_V2:
+            raise TypeError(f"Non BaseModel types are only supported with Pydantic v2 - {response_format}")
+
+        return pydantic.TypeAdapter(response_format).validate_json(content)
 
     raise TypeError(f"Unable to automatically parse response format type {response_format}")
 
@@ -241,14 +243,22 @@ def type_to_response_format_param(
     # can only be a `type`
     response_format = cast(type, response_format)
 
-    if not is_basemodel_type(response_format):
+    json_schema_type: type[pydantic.BaseModel] | pydantic.TypeAdapter[Any] | None = None
+
+    if is_basemodel_type(response_format):
+        name = response_format.__name__
+        json_schema_type = response_format
+    elif is_dataclass_like_type(response_format):
+        name = response_format.__name__
+        json_schema_type = pydantic.TypeAdapter(response_format)
+    else:
         raise TypeError(f"Unsupported response_format type - {response_format}")
 
     return {
         "type": "json_schema",
         "json_schema": {
-            "schema": to_strict_json_schema(response_format),
-            "name": response_format.__name__,
+            "schema": to_strict_json_schema(json_schema_type),
+            "name": name,
             "strict": True,
         },
     }

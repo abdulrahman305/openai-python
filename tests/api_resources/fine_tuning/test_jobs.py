@@ -46,28 +46,29 @@ class TestJobs:
                         "project": "my-wandb-project",
                         "entity": "entity",
                         "name": "name",
-                        "tags": ["custom-tag", "custom-tag", "custom-tag"],
+                        "tags": ["custom-tag"],
                     },
-                },
-                {
-                    "type": "wandb",
-                    "wandb": {
-                        "project": "my-wandb-project",
-                        "entity": "entity",
-                        "name": "name",
-                        "tags": ["custom-tag", "custom-tag", "custom-tag"],
-                    },
-                },
-                {
-                    "type": "wandb",
-                    "wandb": {
-                        "project": "my-wandb-project",
-                        "entity": "entity",
-                        "name": "name",
-                        "tags": ["custom-tag", "custom-tag", "custom-tag"],
-                    },
-                },
+                }
             ],
+            metadata={"foo": "string"},
+            method={
+                "dpo": {
+                    "hyperparameters": {
+                        "batch_size": "auto",
+                        "beta": "auto",
+                        "learning_rate_multiplier": "auto",
+                        "n_epochs": "auto",
+                    }
+                },
+                "supervised": {
+                    "hyperparameters": {
+                        "batch_size": "auto",
+                        "learning_rate_multiplier": "auto",
+                        "n_epochs": "auto",
+                    }
+                },
+                "type": "supervised",
+            },
             seed=42,
             suffix="x",
             validation_file="file-abc123",
@@ -148,6 +149,7 @@ class TestJobs:
         job = client.fine_tuning.jobs.list(
             after="string",
             limit=0,
+            metadata={"foo": "string"},
         )
         assert_matches_type(SyncCursorPage[FineTuningJob], job, path=["response"])
 
@@ -285,28 +287,29 @@ class TestAsyncJobs:
                         "project": "my-wandb-project",
                         "entity": "entity",
                         "name": "name",
-                        "tags": ["custom-tag", "custom-tag", "custom-tag"],
+                        "tags": ["custom-tag"],
                     },
-                },
-                {
-                    "type": "wandb",
-                    "wandb": {
-                        "project": "my-wandb-project",
-                        "entity": "entity",
-                        "name": "name",
-                        "tags": ["custom-tag", "custom-tag", "custom-tag"],
-                    },
-                },
-                {
-                    "type": "wandb",
-                    "wandb": {
-                        "project": "my-wandb-project",
-                        "entity": "entity",
-                        "name": "name",
-                        "tags": ["custom-tag", "custom-tag", "custom-tag"],
-                    },
-                },
+                }
             ],
+            metadata={"foo": "string"},
+            method={
+                "dpo": {
+                    "hyperparameters": {
+                        "batch_size": "auto",
+                        "beta": "auto",
+                        "learning_rate_multiplier": "auto",
+                        "n_epochs": "auto",
+                    }
+                },
+                "supervised": {
+                    "hyperparameters": {
+                        "batch_size": "auto",
+                        "learning_rate_multiplier": "auto",
+                        "n_epochs": "auto",
+                    }
+                },
+                "type": "supervised",
+            },
             seed=42,
             suffix="x",
             validation_file="file-abc123",
@@ -387,6 +390,7 @@ class TestAsyncJobs:
         job = await async_client.fine_tuning.jobs.list(
             after="string",
             limit=0,
+            metadata={"foo": "string"},
         )
         assert_matches_type(AsyncCursorPage[FineTuningJob], job, path=["response"])
 

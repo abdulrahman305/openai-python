@@ -34,24 +34,25 @@ class TestAssistants:
             model="gpt-4o",
             description="description",
             instructions="instructions",
-            metadata={},
+            metadata={"foo": "string"},
             name="name",
+            reasoning_effort="low",
             response_format="auto",
             temperature=1,
             tool_resources={
-                "code_interpreter": {"file_ids": ["string", "string", "string"]},
+                "code_interpreter": {"file_ids": ["string"]},
                 "file_search": {
                     "vector_store_ids": ["string"],
                     "vector_stores": [
                         {
                             "chunking_strategy": {"type": "auto"},
-                            "file_ids": ["string", "string", "string"],
-                            "metadata": {},
+                            "file_ids": ["string"],
+                            "metadata": {"foo": "string"},
                         }
                     ],
                 },
             },
-            tools=[{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
+            tools=[{"type": "code_interpreter"}],
             top_p=1,
         )
         assert_matches_type(Assistant, assistant, path=["response"])
@@ -131,16 +132,17 @@ class TestAssistants:
             assistant_id="assistant_id",
             description="description",
             instructions="instructions",
-            metadata={},
-            model="model",
+            metadata={"foo": "string"},
+            model="string",
             name="name",
+            reasoning_effort="low",
             response_format="auto",
             temperature=1,
             tool_resources={
-                "code_interpreter": {"file_ids": ["string", "string", "string"]},
+                "code_interpreter": {"file_ids": ["string"]},
                 "file_search": {"vector_store_ids": ["string"]},
             },
-            tools=[{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
+            tools=[{"type": "code_interpreter"}],
             top_p=1,
         )
         assert_matches_type(Assistant, assistant, path=["response"])
@@ -266,24 +268,25 @@ class TestAsyncAssistants:
             model="gpt-4o",
             description="description",
             instructions="instructions",
-            metadata={},
+            metadata={"foo": "string"},
             name="name",
+            reasoning_effort="low",
             response_format="auto",
             temperature=1,
             tool_resources={
-                "code_interpreter": {"file_ids": ["string", "string", "string"]},
+                "code_interpreter": {"file_ids": ["string"]},
                 "file_search": {
                     "vector_store_ids": ["string"],
                     "vector_stores": [
                         {
                             "chunking_strategy": {"type": "auto"},
-                            "file_ids": ["string", "string", "string"],
-                            "metadata": {},
+                            "file_ids": ["string"],
+                            "metadata": {"foo": "string"},
                         }
                     ],
                 },
             },
-            tools=[{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
+            tools=[{"type": "code_interpreter"}],
             top_p=1,
         )
         assert_matches_type(Assistant, assistant, path=["response"])
@@ -363,16 +366,17 @@ class TestAsyncAssistants:
             assistant_id="assistant_id",
             description="description",
             instructions="instructions",
-            metadata={},
-            model="model",
+            metadata={"foo": "string"},
+            model="string",
             name="name",
+            reasoning_effort="low",
             response_format="auto",
             temperature=1,
             tool_resources={
-                "code_interpreter": {"file_ids": ["string", "string", "string"]},
+                "code_interpreter": {"file_ids": ["string"]},
                 "file_search": {"vector_store_ids": ["string"]},
             },
-            tools=[{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
+            tools=[{"type": "code_interpreter"}],
             top_p=1,
         )
         assert_matches_type(Assistant, assistant, path=["response"])

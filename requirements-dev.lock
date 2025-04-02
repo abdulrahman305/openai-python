@@ -7,6 +7,7 @@
 #   all-features: true
 #   with-sources: false
 #   generate-hashes: false
+#   universal: false
 
 -e file:.
 annotated-types==0.6.0
@@ -18,14 +19,13 @@ argcomplete==3.1.2
     # via nox
 asttokens==2.4.1
     # via inline-snapshot
-attrs==23.1.0
+attrs==24.2.0
     # via outcome
-    # via pytest
     # via trio
-azure-core==1.30.1
+azure-core==1.31.0
     # via azure-identity
-azure-identity==1.15.0
-black==24.4.2
+azure-identity==1.19.0
+black==24.10.0
     # via inline-snapshot
 certifi==2023.7.22
     # via httpcore
@@ -33,6 +33,7 @@ certifi==2023.7.22
     # via requests
 cffi==1.16.0
     # via cryptography
+    # via sounddevice
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
@@ -49,10 +50,11 @@ distlib==0.3.7
     # via virtualenv
 distro==1.8.0
     # via openai
-exceptiongroup==1.1.3
+exceptiongroup==1.2.2
     # via anyio
+    # via pytest
     # via trio
-executing==2.0.1
+executing==2.1.0
     # via inline-snapshot
 filelock==3.12.4
     # via virtualenv
@@ -60,7 +62,7 @@ h11==0.14.0
     # via httpcore
 httpcore==1.0.2
     # via httpx
-httpx==0.25.2
+httpx==0.28.1
     # via openai
     # via respx
 idna==3.4
@@ -78,19 +80,20 @@ markdown-it-py==3.0.0
     # via rich
 mdurl==0.1.2
     # via markdown-it-py
-msal==1.29.0
+msal==1.31.0
     # via azure-identity
     # via msal-extensions
 msal-extensions==1.2.0
     # via azure-identity
-mypy==1.7.1
+mypy==1.14.1
 mypy-extensions==1.0.0
     # via black
     # via mypy
+nest-asyncio==1.6.0
 nodeenv==1.8.0
     # via pyright
 nox==2023.4.22
-numpy==1.26.3
+numpy==2.0.2
     # via openai
     # via pandas
     # via pandas-stubs
@@ -100,7 +103,7 @@ packaging==23.2
     # via black
     # via nox
     # via pytest
-pandas==2.1.4
+pandas==2.2.3
     # via openai
 pandas-stubs==2.1.4.231227
     # via openai
@@ -109,26 +112,24 @@ pathspec==0.12.1
 platformdirs==3.11.0
     # via black
     # via virtualenv
-pluggy==1.3.0
+pluggy==1.5.0
     # via pytest
-portalocker==2.8.2
+portalocker==2.10.1
     # via msal-extensions
-py==1.11.0
-    # via pytest
 pycparser==2.22
     # via cffi
-pydantic==2.7.1
+pydantic==2.10.3
     # via openai
-pydantic-core==2.18.2
+pydantic-core==2.27.1
     # via pydantic
 pygments==2.18.0
     # via rich
 pyjwt==2.8.0
     # via msal
-pyright==1.1.374
-pytest==7.1.1
+pyright==1.1.392.post0
+pytest==8.3.3
     # via pytest-asyncio
-pytest-asyncio==0.21.1
+pytest-asyncio==0.24.0
 python-dateutil==2.8.2
     # via pandas
     # via time-machine
@@ -138,10 +139,10 @@ pytz==2023.3.post1
 requests==2.31.0
     # via azure-core
     # via msal
-respx==0.20.2
+respx==0.22.0
 rich==13.7.1
     # via inline-snapshot
-ruff==0.5.6
+ruff==0.9.4
 setuptools==68.2.2
     # via nodeenv
 six==1.16.0
@@ -150,39 +151,44 @@ six==1.16.0
     # via python-dateutil
 sniffio==1.3.0
     # via anyio
-    # via httpx
     # via openai
     # via trio
 sortedcontainers==2.4.0
     # via trio
+sounddevice==0.5.1
+    # via openai
 time-machine==2.9.0
 toml==0.10.2
     # via inline-snapshot
-tomli==2.0.1
+tomli==2.0.2
     # via black
     # via mypy
     # via pytest
-tqdm==4.66.1
+tqdm==4.66.5
     # via openai
-trio==0.22.2
-types-pyaudio==0.2.16.20240106
-types-pytz==2024.1.0.20240417
+trio==0.27.0
+types-pyaudio==0.2.16.20240516
+types-pytz==2024.2.0.20241003
     # via pandas-stubs
 types-toml==0.10.8.20240310
     # via inline-snapshot
-types-tqdm==4.66.0.2
+types-tqdm==4.66.0.20240417
 typing-extensions==4.12.2
     # via azure-core
+    # via azure-identity
     # via black
     # via mypy
     # via openai
     # via pydantic
     # via pydantic-core
+    # via pyright
 tzdata==2024.1
     # via pandas
 urllib3==2.2.1
     # via requests
 virtualenv==20.24.5
     # via nox
+websockets==14.2
+    # via openai
 zipp==3.17.0
     # via importlib-metadata

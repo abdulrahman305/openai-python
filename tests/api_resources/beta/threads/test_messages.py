@@ -38,19 +38,11 @@ class TestMessages:
             role="user",
             attachments=[
                 {
-                    "file_id": "string",
-                    "tools": [{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
-                },
-                {
-                    "file_id": "string",
-                    "tools": [{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
-                },
-                {
-                    "file_id": "string",
-                    "tools": [{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
-                },
+                    "file_id": "file_id",
+                    "tools": [{"type": "code_interpreter"}],
+                }
             ],
-            metadata={},
+            metadata={"foo": "string"},
         )
         assert_matches_type(Message, message, path=["response"])
 
@@ -150,9 +142,9 @@ class TestMessages:
     @parametrize
     def test_method_update_with_all_params(self, client: OpenAI) -> None:
         message = client.beta.threads.messages.update(
-            "string",
-            thread_id="string",
-            metadata={},
+            message_id="message_id",
+            thread_id="thread_id",
+            metadata={"foo": "string"},
         )
         assert_matches_type(Message, message, path=["response"])
 
@@ -315,19 +307,11 @@ class TestAsyncMessages:
             role="user",
             attachments=[
                 {
-                    "file_id": "string",
-                    "tools": [{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
-                },
-                {
-                    "file_id": "string",
-                    "tools": [{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
-                },
-                {
-                    "file_id": "string",
-                    "tools": [{"type": "code_interpreter"}, {"type": "code_interpreter"}, {"type": "code_interpreter"}],
-                },
+                    "file_id": "file_id",
+                    "tools": [{"type": "code_interpreter"}],
+                }
             ],
-            metadata={},
+            metadata={"foo": "string"},
         )
         assert_matches_type(Message, message, path=["response"])
 
@@ -427,9 +411,9 @@ class TestAsyncMessages:
     @parametrize
     async def test_method_update_with_all_params(self, async_client: AsyncOpenAI) -> None:
         message = await async_client.beta.threads.messages.update(
-            "string",
-            thread_id="string",
-            metadata={},
+            message_id="message_id",
+            thread_id="thread_id",
+            metadata={"foo": "string"},
         )
         assert_matches_type(Message, message, path=["response"])
 

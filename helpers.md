@@ -128,13 +128,13 @@ The `beta.chat.completions.parse()` method imposes some additional restrictions 
 
 # Streaming Helpers
 
-OpenAI supports streaming responses when interacting with the [Chat Completion] & [Assistant](#assistant-streaming-api) APIs.
+OpenAI supports streaming responses when interacting with the [Chat Completion](#chat-completions-api) & [Assistant](#assistant-streaming-api) APIs.
 
 ## Chat Completions API
 
 The SDK provides a `.beta.chat.completions.stream()` method that wraps the `.chat.completions.create(stream=True)` stream providing a more granular event API & automatic accumulation of each delta.
 
-It also supports all aforementioned [parsing helpers](#parsing-helpers).
+It also supports all aforementioned [parsing helpers](#structured-outputs-parsing-helpers).
 
 Unlike `.create(stream=True)`, the `.stream()` method requires usage within a context manager to prevent accidental leakage of the response:
 
@@ -508,7 +508,7 @@ The polling methods are:
 ```python
 client.beta.threads.create_and_run_poll(...)
 client.beta.threads.runs.create_and_poll(...)
-client.beta.threads.runs.submit_tool_ouptputs_and_poll(...)
+client.beta.threads.runs.submit_tool_outputs_and_poll(...)
 client.beta.vector_stores.files.upload_and_poll(...)
 client.beta.vector_stores.files.create_and_poll(...)
 client.beta.vector_stores.file_batches.create_and_poll(...)
