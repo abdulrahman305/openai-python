@@ -174,13 +174,13 @@ client = AsyncOpenAI()
 
 
 async def main():
-    stream = client.responses.create(
+    stream = await client.responses.create(
         model="gpt-4o",
         input="Write a one-sentence bedtime story about a unicorn.",
         stream=True,
     )
 
-    for event in stream:
+    async for event in stream:
         print(event)
 
 
@@ -351,7 +351,7 @@ response = client.chat.responses.create(
 
 ## File uploads
 
-Request parameters that correspond to file uploads can be passed as `bytes`, a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
 
 ```python
 from pathlib import Path
