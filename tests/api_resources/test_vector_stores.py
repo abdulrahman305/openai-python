@@ -243,7 +243,7 @@ class TestVectorStores:
             },
             max_num_results=1,
             ranking_options={
-                "ranker": "auto",
+                "ranker": "none",
                 "score_threshold": 0,
             },
             rewrite_query=True,
@@ -286,7 +286,9 @@ class TestVectorStores:
 
 
 class TestAsyncVectorStores:
-    parametrize = pytest.mark.parametrize("async_client", [False, True], indirect=True, ids=["loose", "strict"])
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
 
     @parametrize
     async def test_method_create(self, async_client: AsyncOpenAI) -> None:
@@ -509,7 +511,7 @@ class TestAsyncVectorStores:
             },
             max_num_results=1,
             ranking_options={
-                "ranker": "auto",
+                "ranker": "none",
                 "score_threshold": 0,
             },
             rewrite_query=True,

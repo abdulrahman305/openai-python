@@ -7,7 +7,7 @@ from typing_extensions import TypeAlias
 import pytest
 import pydantic
 
-from ...utils import rich_print_str
+from ..utils import rich_print_str
 
 ReprArgs: TypeAlias = "Iterable[tuple[str | None, Any]]"
 
@@ -28,7 +28,7 @@ def print_obj(obj: object, monkeypatch: pytest.MonkeyPatch) -> str:
 
         string = rich_print_str(obj)
 
-        # we remove all `fn_name.<locals>.` occurences
+        # we remove all `fn_name.<locals>.` occurrences
         # so that we can share the same snapshots between
         # pydantic v1 and pydantic v2 as their output for
         # generic models differs, e.g.
@@ -52,3 +52,15 @@ def get_caller_name(*, stacklevel: int = 1) -> str:
 def clear_locals(string: str, *, stacklevel: int) -> str:
     caller = get_caller_name(stacklevel=stacklevel + 1)
     return string.replace(f"{caller}.<locals>.", "")
+
+
+def get_snapshot_value(snapshot: Any) -> Any:
+    if not hasattr(snapshot, "_old_value"):
+        return snapshot
+
+    old = snapshot._old_value
+    if not hasattr(old, "value"):
+        return old
+
+    loader = getattr(old.value, "_load_value", None)
+    return loader() if loader else old.value
